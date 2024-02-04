@@ -1,0 +1,21 @@
+# Virtual Environment Management Script
+
+This script is designed to facilitate the creation, deletion, and management of Python virtual environments. Additionally, it provides functionality for updating packages and listing installed packages within an environment.
+
+## Usage
+
+### Options
+
+- **-c**: Check existing environments.
+- **-e <name>**: Specify the environment name.
+- **-f <file>**: Specify the requirements file for environment creation.
+- **-l**: List installed packages in an environment.
+- **-u**: Update packages.
+- **-d**: Delete an environment.
+
+### Examples
+
+#### Check Existing Environments
+
+```bash
+./env.sh -c
