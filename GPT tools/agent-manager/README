@@ -1,0 +1,97 @@
+# Agents Management Script
+
+## Overview
+The `agents.py` script is designed to manage virtual assistants created with the OpenAI API. It allows users to create, list, update, delete, and retrieve detailed information about their assistants. This script is particularly useful for those looking to automate and manage multiple AI agents efficiently.
+
+## Prerequisites
+Before you begin, ensure you have the following:
+- Python 3.6 or later installed on your system.
+- An OpenAI API key. You can obtain one by signing up at [OpenAI](https://openai.com/).
+
+## Installation
+
+### 1. Clone the repository
+Clone this repository to your local machine using:
+
+```bash
+git clone https://github.com/panea-catalin/agent-manager.git
+cd path-to-cloned-repository
+```
+
+### 2. Set up a virtual environment (Optional but recommended)
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
+
+### 3. Install the requirements
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Set your OpenAI API Key
+Set your OpenAI API key as an environment variable. Replace 'your-api-key' with your actual OpenAI API key.
+
+**Linux/Mac:**
+```bash
+export OPENAI_API_KEY='your-api-key'
+```
+
+**Windows:**
+```bash
+set OPENAI_API_KEY=your-api-key
+```
+
+## Usage
+
+Run the script using:
+
+```bash
+python3 agents.py
+```
+
+### Commands:
+- `list`: Lists all available assistants.
+- `create`: Creates a new assistant. You will be prompted for the name, description, and optionally the instruction file.
+- `update`: Updates an existing assistant. You need to provide the ID, new name, and new description.
+- `delete`: Deletes an assistant by ID.
+- `deleteall`: Deletes all assistants. Use with caution.
+- `info [-e]`: Retrieves detailed information about an assistant. Use `-e` for extended details.
+- `quit`: Exits the script.
+
+### Examples:
+
+**Creating a New Assistant:**
+```bash
+create
+Enter the name of the new assistant: My Assistant
+Enter the description: This is a test assistant.
+Enter the index of the instruction file (or 0 for none): 1
+```
+
+**Updating an Assistant:**
+```bash
+update
+Enter the ID of the assistant to update: assistant_id
+Enter the new name: Updated Assistant Name
+Enter the new description: Updated description here.
+```
+
+**Deleting an Assistant:**
+```bash
+delete
+Enter the ID of the assistant to delete: assistant_id
+```
+
+## Contributing
+Contributions to enhance this script are welcome. Please fork the repository and submit a pull request with your improvements.
+
+## License
+[MIT License](https://opensource.org/licenses/MIT) - See the LICENSE file for details.
+
+## Contact
+For support or queries, reach out to [Your Contact Information].
+
+```
+
+Replace `[Your Contact Information]` with your actual contact information or support channel. Also, update the repository link and any specific instructions based on your environment or script version. This README provides a good starting point, but you might need to add more sections or details depending on the script's complexity and additional features.
