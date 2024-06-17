@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sign-up-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sign-up-app
+  template:
+    metadata:
+      labels:
+        app: sign-up-app
+    spec:
+      containers:
+      - name: sign-up-app
+        image: vancleefy/sign-up-app:latest
+        ports:
+        - containerPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sign-up-app-service
+spec:
+  selector:
+    app: sign-up-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3001
+

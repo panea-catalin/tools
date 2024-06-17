@@ -1,0 +1,26 @@
+# Use the official Flutter image from Docker Hub
+FROM cirrusci/flutter:latest
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the pubspec files and run pub get
+COPY pubspec.yaml pubspec.lock ./
+RUN flutter pub get
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the Flutter web app
+RUN flutter build web
+
+# Use an Nginx image to serve the Flutter web app
+FROM nginx:alpine
+COPY --from=0 /app/build/web /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]
+
