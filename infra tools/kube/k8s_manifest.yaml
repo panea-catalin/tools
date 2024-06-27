@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-app
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-db-config
+  namespace: flask-app
+data:
+  init_db.py: |
+    import sqlite3
+
+    connection = sqlite3.connect('/mnt/data/flask-app/database.db')
+
+    with open('/mnt/data/flask-app/schema.sql') as f:
+        connection.executescript(f.read())
+
+    cur = connection.cursor()
+
+    cur.execute("INSERT INTO posts (title, content) VALUES (?, ?)",
+                ('First Post', 'Content for the first post')
+                )
+
+    cur.execute("INSERT INTO posts (title, content) VALUES (?, ?)",
+                ('Second Post', 'Content for the second post')
+                )
+
+    connection.commit()
+    connection.close()
+  schema.sql: |
+    CREATE TABLE posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL
+    );
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-db
+  namespace: flask-app
+spec:
+  containers:
+  - name: init-db
+    image: vancleefy/my-postgres:latest
+    volumeMounts:
+    - name: flask-app-storage
+      mountPath: /mnt/data/flask-app
+  volumes:
+  - name: flask-app-storage
+    persistentVolumeClaim:
+      claimName: flask-app-pvc
+  restartPolicy: OnFailure
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  namespace: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: vancleefy/main-page-app:latest
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: flask-app-storage
+          mountPath: /mnt/data/flask-app
+      volumes:
+      - name: flask-app-storage
+        persistentVolumeClaim:
+          claimName: flask-app-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+  namespace: flask-app
+spec:
+  selector:
+    app: flask-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
