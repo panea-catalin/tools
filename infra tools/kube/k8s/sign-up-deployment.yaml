@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sign-up-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sign-up
+  template:
+    metadata:
+      labels:
+        app: sign-up
+    spec:
+      containers:
+      - name: sign-up
+        image: your_dockerhub_username/myapp-sign-up:latest
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sign-up-service
+spec:
+  selector:
+    app: sign-up
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5001
+  type: LoadBalancer
+

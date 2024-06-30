@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flutter-development
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flutter-development
+  template:
+    metadata:
+      labels:
+        app: flutter-development
+    spec:
+      containers:
+      - name: flutter
+        image: vancleefy/flutter-development:latest
+        command: [ "sh", "-c", "while true; do echo hello; sleep 10;done" ]
+        ports:
+        - containerPort: 8080
+

@@ -1,0 +1,42 @@
+FROM debian:buster
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y curl git unzip xz-utils zip libglu1-mesa
+
+# Download and extract Flutter SDK
+RUN curl -s https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.3.0-stable.tar.xz | tar -xJ
+
+# Set Flutter in the PATH
+ENV PATH "$PATH:/flutter/bin"
+
+# Configure Git to allow running as root
+RUN git config --global --add safe.directory /flutter
+
+# Pre-cache Flutter web dependencies and disable analytics
+RUN flutter config --no-analytics
+RUN flutter channel stable && flutter upgrade
+RUN flutter config --enable-web
+RUN flutter precache --web
+
+# Create a new user and switch to it
+RUN useradd -ms /bin/bash flutteruser
+USER flutteruser
+WORKDIR /home/flutteruser
+
+# Set up environment variables to disable telemetry and analytics prompts
+ENV FLUTTER_ANALYTICS_DISABLED=true
+ENV PUB_ENVIRONMENT="flutter_cli:docker"
+ENV PATH="/home/flutteruser/.pub-cache/bin:$PATH"
+
+# Copy your Flutter project into the container
+#COPY app /home/flutteruser/app
+
+# Change to the app directory
+#WORKDIR /home/flutteruser/app
+
+# Expose the port for the Flutter web server
+EXPOSE 8080
+
+# Command to keep the container running
+#CMD ["flutter", "run"]
+
